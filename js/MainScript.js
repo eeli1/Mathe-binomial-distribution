@@ -4,9 +4,23 @@ function relodeElement(element) {
   return element;
 }
 
+function setup() {
+
+}
+
+function update() {
+
+}
+
 function main() {
   var binomial = new Binomial(4);
   var body = document.body;
+
+
+  // let slider = createSlider({ min: 1, max: 100, default: 10, }, { default: 0.5 });
+  // body.appendChild(slider)
+
+
 
   // get input
   var n = document.getElementById("n_field").value;
