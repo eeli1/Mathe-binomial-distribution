@@ -1,16 +1,14 @@
-function drawChart(ctx, data, label) {
-  var index = [];
-  for (let i = 0; i < data.length; i++) index.push(i);
-  var myChart = new Chart(ctx, {
+function drawChart(ctx, data, label, backgroundColor, borderColor) {
+  new Chart(ctx, {
     type: "bar",
     data: {
-      labels: index,
+      labels: data,
       datasets: [
         {
           label: label,
           data: data,
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          borderColor: "rgba(255, 99, 132, 1)",
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
           borderWidth: 1,
         },
       ],
@@ -24,7 +22,9 @@ function drawChart(ctx, data, label) {
   });
 }
 
-function createChart(name, data) {
+function createChart(name, data, mask, color1, color2) {
+
+  // create Canvas
   var canvas = document.createElement("canvas");
   canvas.width = 400;
   canvas.height = 400;
@@ -33,7 +33,20 @@ function createChart(name, data) {
   canvas.style.height = "400px";
   canvas.style.float = "left";
 
-  drawChart(canvas.getContext("2d"), data, name);
+  let backgroundColor = []
+  let borderColor = []
+
+  for (let i = 0; i < mask.length; i++) {
+    if (mask[i] == true) {
+      backgroundColor.push("rgba(" + color1.r + ", " + color1.g + ", " + color1.b + ", 0.2)")
+      borderColor.push("rgba(" + color1.r + ", " + color1.g + ", " + color1.b + ", 1)")
+    } else {
+      backgroundColor.push("rgba(" + color2.r + ", " + color2.g + ", " + color2.b + ", 0.2)")
+      borderColor.push("rgba(" + color2.r + ", " + color2.g + ", " + color2.b + ", 1)")
+    }
+  }
+
+  drawChart(canvas.getContext("2d"), data, name, backgroundColor, borderColor);
 
   return canvas;
 }
