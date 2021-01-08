@@ -22,63 +22,9 @@ class MyMath {
   }
 }
 
-class Approximater {
-  constructor() {
-    this.math = new MyMath();
-  }
-
-  binSearch(lamda, y, minimal, maximal, precision) {
-    var x = (minimal + maximal) / 2;
-
-    if (this.math.roundPrecision(lamda(x), precision) == y) return x;
-    if (this.math.roundPrecision(lamda(x), precision) < y)
-      return binSearch(lamda, y, x, maximal);
-    if (this.math.roundPrecision(lamda(x), precision) > y)
-      return this.binSearch(lamda, y, minimal, x);
-  }
-
-  findeMax(lamda, y, x) {
-    if (lamda(x) > y) return x;
-    return this.findeMax(lamda, y, x * 2);
-  }
-
-  findeMax(lamda, y, x) {
-    if (lamda(x) > y) return x;
-    return this.findeMax(lamda, y, x * 2);
-  }
-
-  approximate(lamda, y, precision) {
-    var minimal = 0;
-    var maximal = this.findeMax(lamda, y, 2);
-
-    return this.binSearch(lamda, y, minimal, maximal, precision);
-  }
-
-  approximateMinStart(lamda, y, minStart, precision) {
-    var minimal = minStart;
-    var maximal = this.findeMax(lamda, y, minStart);
-
-    return this.binSearch(lamda, y, minimal, maximal, precision);
-  }
-
-  approximateMaxStart(lamda, y, maxStart, precision) {
-    var minimal = 0;
-    var maximal = maxStart;
-
-    return this.binSearch(lamda, y, minimal, maximal, precision);
-  }
-
-  approximateProcent(lamda, y, precision) {
-    var minimal = 0;
-    var maximal = 1;
-
-    return this.binSearch(lamda, y, minimal, maximal, precision);
-  }
-}
 class Binomial {
   constructor(precision) {
     this.precision = precision;
-    this.approx = new Approximater();
     this.math = new MyMath();
   }
 
@@ -98,68 +44,5 @@ class Binomial {
 
     for (var i = 1; i < k; i++) result += this.PMF(n, i, p);
     return this.math.roundPrecision(result, this.precision);
-  }
-
-  CDF_Get_n(P, k, p) {
-    return this.math.approximateMinStart(
-      (n) => {
-        this.CDF(n, k, p);
-      },
-      P,
-      k,
-      this.precision
-    );
-  }
-
-  CDF_Get_k(P, n, p) {
-    return this.math.approximateMaxStart(
-      (k) => {
-        this.CDF(n, k, p);
-      },
-      P,
-      n,
-      this.precision
-    );
-  }
-
-  CDF_Get_p(P, n, k) {
-    return this.math.approximateProcent(
-      (p) => {
-        this.CDF(n, k, p);
-      },
-      P,
-      this.precision
-    );
-  }
-
-  PMF_Get_n(P, k, p) {
-    return this.math.approximateMinStart(
-      (n) => {
-        this.PMF(n, k, p);
-      },
-      P,
-      this.precision
-    );
-  }
-
-  PMF_Get_k(P, n, p) {
-    return this.math.approximateMaxStart(
-      (k) => {
-        this.PMF(n, k, p);
-      },
-      P,
-      n,
-      this.precision
-    );
-  }
-
-  PMF_Get_p(P, n, k) {
-    return this.math.approximateProcent(
-      (p) => {
-        this.PMF(n, k, p);
-      },
-      P,
-      this.precision
-    );
   }
 }

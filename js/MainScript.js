@@ -1,7 +1,3 @@
-
-
-
-
 function relodeElement(element) {
   if (document.getElementById(element.id) != undefined)
     document.getElementById(element.id).remove()
@@ -9,8 +5,8 @@ function relodeElement(element) {
 }
 
 function validateN(n) {
-  if (!(n > 0 && n < 100)) {
-    var err = "error n := {x \u220A \u2115* | x < 100}"
+  if (!(n > 0 && n < this.maxN)) {
+    var err = "error n := {x \u220A \u2115* | x < " + this.maxN + "}"
     console.log(err)
     //body.appendChild(document.createTextNode(err))
     return false
@@ -35,6 +31,7 @@ function setup() {
   this.body = document.body
   this.color1 = { r: 255, g: 99, b: 132 }
   this.color2 = { r: 87, g: 99, b: 255 }
+  this.maxN = 100
 }
 
 function update() {
@@ -70,7 +67,25 @@ function showTable(n, p) {
   this.body.appendChild(relodeElement(table))
 }
 
+function getCDFN(p, k, CDF) {
+  for (let n = k; n < this.maxN; n++) {
+    if (CDF >= this.binomial.CDF(n, k, p))
+      return n
+  }
+  return -1
+}
 
+function getCDFP(n, k) {
+
+}
+
+function showCDFK(n, p, k) {
+
+}
+
+function showPMFK(n, p, k) {
+
+}
 
 function main() {
   setup()
@@ -78,7 +93,13 @@ function main() {
   // let slider = createSlider({ min: 1, max: 100, default: 10, }, { default: 0.5 })
   // body.appendChild(slider)
 
+  let k = 34
+  let CDF = 0.9923
+  let p = 0.5
+  let n = getCDFN(p, k, CDF)
+  console.log("n:", n, "CDF:", this.binomial.CDF(n, k, p))
 
-  showTable(30, 0.5)
+  showTable(50, 0.5)
+
 
 }
