@@ -1,8 +1,13 @@
 function drawChart(ctx, data, label, backgroundColor, borderColor) {
+  let labels = []
+  for (let i = 0; i < data.length; i++) {
+    labels.push("P(X = " + i + ") = " + data[i])
+
+  }
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: data,
+      labels: labels,
       datasets: [
         {
           label: label,

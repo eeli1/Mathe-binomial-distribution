@@ -27,7 +27,9 @@ function validateP(p) {
 }
 
 function setup() {
-  this.binomial = new Binomial(4)
+  this.precision = 4
+  this.binomial = new Binomial(this.precision)
+  this.math = new MyMath()
   this.body = document.body
   this.color1 = { r: 255, g: 99, b: 132 }
   this.color2 = { r: 87, g: 99, b: 255 }
@@ -54,12 +56,8 @@ function showTable(n, p) {
   }
 
   // draw charts
-  var chartPMF = createChart("Bn: P(X = k)", pmfValues, mask, this.color1, this.color2)
-  chartPMF.id = "PMF_chart"
-  this.body.appendChild(relodeElement(chartPMF))
-  var chartCDF = createChart("Bn: P(X \u2264 k)", cdfValues, mask, this.color1, this.color2)
-  chartCDF.id = "CDF_chart"
-  this.body.appendChild(relodeElement(chartCDF))
+  makeChart("Bn: P(X = k)", "PMF_chart", pmfValues, mask)
+  makeChart("Bn: P(X \u2264 k)", "CDF_chart", cdfValues, mask)
 
   // generate table
   var table = generateTable(pmfValues, cdfValues)
@@ -75,16 +73,42 @@ function getCDFN(p, k, CDF) {
   return -1
 }
 
-function getCDFP(n, k) {
-
+function getCDFP(n, k, CDF) {
+  for (let p = 0; p < this.math.power(10, this.precision); p++) {
+    if (CDF < this.binomial.CDF(n, k, p / this.math.power(10, this.precision)))
+      return p / this.math.power(10, this.precision)
+  }
+  return -1
 }
 
 function showCDFK(n, p, k) {
+  if (!validateP(p) || !validateN(n))
+    return
 
+}
+
+function makeChart(name, id, values, mask) {
+  var chart = createChart(name, values, mask, this.color1, this.color2)
+  chart.id = id
+  this.body.appendChild(relodeElement(chart))
 }
 
 function showPMFK(n, p, k) {
 
+  if (k > n)
+    return
+  if (!validateP(p) || !validateN(n))
+    return
+
+  var pmfValues = []
+  var mask = []
+  for (let i = 0; i < n; i++) {
+    pmfValues.push(this.binomial.PMF(n, k, p))
+    if (i == k)
+      mask.push(false)
+    else
+      mask.push(true)
+  }
 }
 
 function main() {
@@ -93,11 +117,11 @@ function main() {
   // let slider = createSlider({ min: 1, max: 100, default: 10, }, { default: 0.5 })
   // body.appendChild(slider)
 
-  let k = 34
-  let CDF = 0.9923
-  let p = 0.5
-  let n = getCDFN(p, k, CDF)
-  console.log("n:", n, "CDF:", this.binomial.CDF(n, k, p))
+  let k = 30
+  let CDF = 0.8987
+  let n = 50
+  let p = getCDFP(n, k, CDF)
+  console.log("p:", p, "CDF:", this.binomial.CDF(n, k, p))
 
   showTable(50, 0.5)
 
