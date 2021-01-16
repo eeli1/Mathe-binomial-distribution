@@ -1,129 +1,150 @@
-function relodeElement(element) {
-  if (document.getElementById(element.id) != undefined)
-    document.getElementById(element.id).remove()
-  return element
+// error and validating
+
+function makeError(error) {
+  console.error(error);
+  //body.appendChild(document.createTextNode(error))
 }
 
 function validateN(n) {
   if (!(n > 0 && n < this.maxN)) {
-    var err = "error n := {x \u220A \u2115* | x < " + this.maxN + "}"
-    console.log(err)
-    //body.appendChild(document.createTextNode(err))
-    return false
+    makeError("n := {x \u220A \u2115* | x < " + this.maxN + "}");
+    return false;
   }
-
-  return true
+  return true;
 }
 
 function validateP(p) {
   if (!(p > 0 && p < 1)) {
-    var err = "error p := {x \u220A \u211D | 0 < x < 1}"
-    console.log(err)
-    //body.appendChild(document.createTextNode(err))
-    return false
+    makeError("p := {x \u220A \u211D | 0 < x < 1}");
+    return false;
   }
+  return true;
+}
 
-  return true
+function validateK(k, n) {
+  if (k > n) {
+    makeError("k < n");
+    return false;
+  }
+  return true;
 }
 
 function setup() {
-  this.precision = 4
-  this.binomial = new Binomial(this.precision)
-  this.math = new MyMath()
-  this.body = document.body
-  this.color1 = { r: 255, g: 99, b: 132 }
-  this.color2 = { r: 87, g: 99, b: 255 }
-  this.maxN = 100
+  this.precision = 4;
+  this.binomial = new Binomial(this.precision);
+  this.math = new MyMath();
+  this.createDOM = new CreateDOM();
+  this.body = document.body;
+  this.color1 = { r: 255, g: 99, b: 132 };
+  this.color2 = { r: 87, g: 99, b: 255 };
+  this.maxN = 100;
+  this.createdObjId = [];
 }
 
-function update() {
-
-}
-
-function showTable(n, p) {
-
-  if (!validateP(p) || !validateN(n))
-    return
-
-  // calculate values
-  var pmfValues = []
-  var cdfValues = []
-  var mask = []
-  for (let k = 0; k < n; k++) {
-    pmfValues.push(this.binomial.PMF(n, k, p))
-    cdfValues.push(this.binomial.CDF(n, k, p))
-    mask.push(true)
-  }
-
-  // draw charts
-  makeChart("Bn: P(X = k)", "PMF_chart", pmfValues, mask)
-  makeChart("Bn: P(X \u2264 k)", "CDF_chart", cdfValues, mask)
-
-  // generate table
-  var table = generateTable(pmfValues, cdfValues)
-  table.id = "table"
-  this.body.appendChild(relodeElement(table))
-}
-
-function getCDFN(p, k, CDF) {
-  for (let n = k; n < this.maxN; n++) {
-    if (CDF >= this.binomial.CDF(n, k, p))
-      return n
-  }
-  return -1
-}
-
-function getCDFP(n, k, CDF) {
-  for (let p = 0; p < this.math.power(10, this.precision); p++) {
-    if (CDF < this.binomial.CDF(n, k, p / this.math.power(10, this.precision)))
-      return p / this.math.power(10, this.precision)
-  }
-  return -1
-}
-
-function showCDFK(n, p, k) {
-  if (!validateP(p) || !validateN(n))
-    return
-
+function clear() {
+  this.createdObjId.forEach((id) =>
+    document.getElementById(id) == undefined
+      ? makeError("id: " + id + " is undefined")
+      : document.getElementById(id).remove()
+  );
+  this.createdObjId = [];
 }
 
 function makeChart(name, id, values, mask) {
-  var chart = createChart(name, values, mask, this.color1, this.color2)
-  chart.id = id
-  this.body.appendChild(relodeElement(chart))
+  var chart = this.createDOM.createChart(
+    name,
+    values,
+    mask,
+    this.color1,
+    this.color2
+  );
+  chart.id = id;
+  this.createdObjId.push(id);
+  this.body.appendChild(chart);
 }
 
-function showPMFK(n, p, k) {
+function makeTable1(values) {
+  var table = this.createDOM.generateTable1(values);
+  table.id = "table";
+  this.createdObjId.push(table.id);
+  this.body.appendChild(table);
+}
 
-  if (k > n)
-    return
-  if (!validateP(p) || !validateN(n))
-    return
+function makeTable2(pmfValues, cdfValues) {
+  var table = this.createDOM.generateTable2(pmfValues, cdfValues);
+  table.id = "table";
+  this.createdObjId.push(table.id);
+  this.body.appendChild(table);
+}
 
-  var pmfValues = []
-  var mask = []
+function generatePMFVal(n, p) {
+  var values = [];
+  for (let i = 0; i < n; i++) values.push(this.binomial.PMF(n, i, p));
+  return values;
+}
+
+function generateCDFVal(n, p) {
+  var values = [];
+  for (let i = 0; i < n; i++) values.push(this.binomial.CDF(n, i, p));
+  return values;
+}
+
+function generateMask(n, k, lamda) {
+  var mask = [];
   for (let i = 0; i < n; i++) {
-    pmfValues.push(this.binomial.PMF(n, k, p))
-    if (i == k)
-      mask.push(false)
-    else
-      mask.push(true)
+    if (lamda(k, i)) mask.push(false);
+    else mask.push(true);
   }
+  return mask;
+}
+
+function generateMaskK2(n, k1, k2) {
+  var mask = [];
+  for (let i = 0; i < n; i++) {
+    values.push(this.binomial.PMF(n, i, p));
+    if (i >= k1 && i <= k2) mask.push(false);
+    else mask.push(true);
+  }
+  return mask;
+}
+
+function showPMF(n, p, pmfMask) {
+  let pmfValues = generatePMFVal(n, p);
+  makeChart("P(X = k)", "PMF_chart", pmfValues, pmfMask);
+  makeTable1(pmfValues);
+}
+
+function showPMF_CDF(n, p, pmfMask, cdfMask) {
+  let pmfValues = generatePMFVal(n, p);
+  let cdfValues = generateCDFVal(n, p);
+  makeChart("P(X = k)", "PMF_chart", pmfValues, pmfMask);
+  makeChart("P(X = k)", "PMF_chart", cdfValues, cdfMask);
+  makeTable2(pmfValues, cdfValues);
 }
 
 function main() {
-  setup()
+  setup();
 
-  // let slider = createSlider({ min: 1, max: 100, default: 10, }, { default: 0.5 })
-  // body.appendChild(slider)
+  /*
+  let slider = this.createDOM.createSlider(
+    { min: 1, max: 100, default: 10 },
+    { default: 0.5 }
+  );
+  body.appendChild(slider);
+  */
 
-  let k = 30
-  let CDF = 0.8987
-  let n = 50
-  let p = getCDFP(n, k, CDF)
-  console.log("p:", p, "CDF:", this.binomial.CDF(n, k, p))
+  let n = 50;
+  let p = 0.5;
+  let k = 20;
 
-  showTable(50, 0.5)
-
-
+  showPMF_CDF(
+    n,
+    p,
+    generateMask(n, k, (k, i) => {
+      return i == k;
+    }),
+    generateMask(n, k, (k, i) => {
+      return false;
+    })
+  );
 }
