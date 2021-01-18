@@ -9,9 +9,6 @@ class DrawDOM {
     this.color2 = { r: 87, g: 99, b: 255 };
     this.maxN = 100;
     this.createdObjId = [];
-    this.onlyPMF = false;
-    this.showCDFValue = true;
-    // this.validate = new Validate;
   }
 
   clear() {
@@ -97,7 +94,7 @@ class DrawDOM {
   getCDFValue(n, p, pmfMask) {
     let result = 0;
     for (let k = 0; k < n; k++)
-      if (pmfMask[k]) result += this.binomial.PMF(n, k, p);
+      if (!pmfMask[k]) result += this.binomial.PMF(n, k, p);
     return result;
   }
 
@@ -105,86 +102,65 @@ class DrawDOM {
     let mask = this.generateMask(n, 0, (k, i) => {
       return false;
     });
-
-    if (this.showCDFValue) this.getCDFValue(n, p, mask);
-    if (this.onlyPMF) {
-      this.showPMF(n, p, mask);
-    } else {
-      this.showPMF_CDF(n, p, mask, mask);
-    }
+    this.showPMF_CDF(n, p, mask, mask);
+    return this.getCDFValue(n, p, mask);
   }
 
   kEqual(n, p, k) {
     let pmfMask = this.generateMask(n, k, (k, i) => {
       return i == k;
     });
-
-    if (this.onlyPMF) {
-      this.showPMF(n, p, pmfMask);
-    } else {
-      this.showPMF_CDF(
-        n,
-        p,
-        pmfMask,
-        this.generateMask(n, k, (k, i) => {
-          return false;
-        })
-      );
-    }
+    this.showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      this.generateMask(n, k, (k, i) => {
+        return false;
+      })
+    );
+    return this.getCDFValue(n, p, pmfMask);
   }
 
   kGreaterEqual(n, p, k) {
     let pmfMask = this.generateMask(n, k, (k, i) => {
       return i >= k;
     });
-
-    if (this.onlyPMF) {
-      this.showPMF(n, p, pmfMask);
-    } else {
-      this.showPMF_CDF(
-        n,
-        p,
-        pmfMask,
-        this.generateMask(n, k, (k, i) => {
-          return false;
-        })
-      );
-    }
+    this.showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      this.generateMask(n, k, (k, i) => {
+        return false;
+      })
+    );
+    return this.getCDFValue(n, p, pmfMask);
   }
 
   kLessEqual(n, p, k) {
     let pmfMask = this.generateMask(n, k, (k, i) => {
       return i <= k;
     });
-
-    if (this.onlyPMF) {
-      this.showPMF(n, p, pmfMask);
-    } else {
-      this.showPMF_CDF(
-        n,
-        p,
-        pmfMask,
-        this.generateMask(n, k, (k, i) => {
-          return i == k;
-        })
-      );
-    }
+    this.showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      this.generateMask(n, k, (k, i) => {
+        return i == k;
+      })
+    );
+    return this.getCDFValue(n, p, pmfMask);
   }
 
   k1Tok2(n, p, k1, k2) {
     let pmfMask = this.generateMaskK2(n, k1, k2);
-
-    if (this.onlyPMF) {
-      this.showPMF(n, p, pmfMask);
-    } else {
-      this.showPMF_CDF(
-        n,
-        p,
-        pmfMask,
-        this.generateMask(n, k1, (k, i) => {
-          return false;
-        })
-      );
-    }
+    this.showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      this.generateMask(n, k1, (k, i) => {
+        return false;
+      })
+    );
+    return this.getCDFValue(n, p, pmfMask);
   }
 }

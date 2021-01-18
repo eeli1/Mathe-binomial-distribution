@@ -46,7 +46,7 @@ class Binomial {
 
   CDF(n, k, p) {
     let result = this.PMF(n, 0, p);
-
+    k++;
     for (let i = 1; i < k; i++) result += this.PMF(n, i, p);
     return this.math.roundPrecision(result, this.precision);
   }

@@ -7,7 +7,7 @@ function noK() {
   let p = parseFloat(document.getElementById("pInput").value);
   this.validate.validateP(p);
 
-  this.drawDOM.noK(n, p);
+  document.getElementById("CDF").value = this.drawDOM.noK(n, p);
 }
 
 function kEqual() {
@@ -22,7 +22,7 @@ function kEqual() {
   let k = parseFloat(document.getElementById("kEq").value);
   this.validate.validateK(k, n);
 
-  this.drawDOM.kEqual(n, p, k);
+  document.getElementById("CDF").value = this.drawDOM.kEqual(n, p, k);
 }
 
 function kGreaterEqual() {
@@ -37,7 +37,7 @@ function kGreaterEqual() {
   let k = parseFloat(document.getElementById("kGEq").value);
   this.validate.validateK(k, n);
 
-  this.drawDOM.kGreaterEqual(n, p, k);
+  document.getElementById("CDF").value = this.drawDOM.kGreaterEqual(n, p, k);
 }
 
 function kLessEqual() {
@@ -52,7 +52,7 @@ function kLessEqual() {
   let k = parseFloat(document.getElementById("kLEq").value);
   this.validate.validateK(k, n);
 
-  this.drawDOM.kLessEqual(n, p, k);
+  document.getElementById("CDF").value = this.drawDOM.kLessEqual(n, p, k);
 }
 
 function k1Tok2() {
@@ -70,7 +70,7 @@ function k1Tok2() {
   let k2 = parseFloat(document.getElementById("k2").value);
   this.validate.validateK(k2, n);
 
-  this.drawDOM.k1Tok2(n, p, k1, k2);
+  document.getElementById("CDF").value = this.drawDOM.k1Tok2(n, p, k1, k2);
 }
 
 function main() {
