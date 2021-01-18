@@ -1,27 +1,82 @@
-function setup() {
-  
+function noK() {
+  this.drawDOM.clear();
+
+  let n = parseInt(document.getElementById("nInput").value) + 1;
+  this.validate.validateN(n);
+
+  let p = parseFloat(document.getElementById("pInput").value);
+  this.validate.validateP(p);
+
+  this.drawDOM.noK(n, p);
 }
 
+function kEqual() {
+  this.drawDOM.clear();
 
+  let n = parseInt(document.getElementById("nInput").value) + 1;
+  this.validate.validateN(n);
+
+  let p = parseFloat(document.getElementById("pInput").value);
+  this.validate.validateP(p);
+
+  let k = parseFloat(document.getElementById("kEq").value);
+  this.validate.validateK(k, n);
+
+  this.drawDOM.kEqual(n, p, k);
+}
+
+function kGreaterEqual() {
+  this.drawDOM.clear();
+
+  let n = parseInt(document.getElementById("nInput").value) + 1;
+  this.validate.validateN(n);
+
+  let p = parseFloat(document.getElementById("pInput").value);
+  this.validate.validateP(p);
+
+  let k = parseFloat(document.getElementById("kGEq").value);
+  this.validate.validateK(k, n);
+
+  this.drawDOM.kGreaterEqual(n, p, k);
+}
+
+function kLessEqual() {
+  this.drawDOM.clear();
+
+  let n = parseInt(document.getElementById("nInput").value) + 1;
+  this.validate.validateN(n);
+
+  let p = parseFloat(document.getElementById("pInput").value);
+  this.validate.validateP(p);
+
+  let k = parseFloat(document.getElementById("kLEq").value);
+  this.validate.validateK(k, n);
+
+  this.drawDOM.kLessEqual(n, p, k);
+}
+
+function k1Tok2() {
+  this.drawDOM.clear();
+
+  let n = parseInt(document.getElementById("nInput").value) + 1;
+  this.validate.validateN(n);
+
+  let p = parseFloat(document.getElementById("pInput").value);
+  this.validate.validateP(p);
+
+  let k1 = parseFloat(document.getElementById("k1").value);
+  this.validate.validateK(k1, n);
+
+  let k2 = parseFloat(document.getElementById("k2").value);
+  this.validate.validateK(k2, n);
+
+  this.drawDOM.k1Tok2(n, p, k1, k2);
+}
 
 function main() {
-  setup();
-
-  /*
-  let slider = this.createDOM.createSlider(
-    { min: 1, max: 100, default: 10 },
-    { default: 0.5 }
-  );
-  body.appendChild(slider);
-  */
-
-  let drawDOM = new DrawDOM();
-  let n = 50;
-  let p = 0.5;
-  let k = 20;
-  let CDF = 0.059460226279717254;
-
-  //console.log(this.binomial.getCDFP(n, k, CDF));
-
-  drawDOM.k1Tok2(n, p, k,30);
+  this.drawDOM = new DrawDOM();
+  this.validate = new Validate();
+  document.getElementById("nInput").value = 50;
+  document.getElementById("pInput").value = 0.5;
+  noK();
 }

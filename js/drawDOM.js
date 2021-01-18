@@ -1,6 +1,5 @@
 class DrawDOM {
   constructor() {
-
     this.precision = 4;
     this.binomial = new Binomial(this.precision);
     this.math = new MyMath();
@@ -107,7 +106,7 @@ class DrawDOM {
       return false;
     });
 
-    if (this.showCDFValue) getCDFValue(n, p, mask);
+    if (this.showCDFValue) this.getCDFValue(n, p, mask);
     if (this.onlyPMF) {
       this.showPMF(n, p, mask);
     } else {
@@ -115,7 +114,26 @@ class DrawDOM {
     }
   }
 
-  greaterEqual(n, p, k) {
+  kEqual(n, p, k) {
+    let pmfMask = this.generateMask(n, k, (k, i) => {
+      return i == k;
+    });
+
+    if (this.onlyPMF) {
+      this.showPMF(n, p, pmfMask);
+    } else {
+      this.showPMF_CDF(
+        n,
+        p,
+        pmfMask,
+        this.generateMask(n, k, (k, i) => {
+          return false;
+        })
+      );
+    }
+  }
+
+  kGreaterEqual(n, p, k) {
     let pmfMask = this.generateMask(n, k, (k, i) => {
       return i >= k;
     });
@@ -134,7 +152,7 @@ class DrawDOM {
     }
   }
 
-  lessEqual(n, p, k) {
+  kLessEqual(n, p, k) {
     let pmfMask = this.generateMask(n, k, (k, i) => {
       return i <= k;
     });

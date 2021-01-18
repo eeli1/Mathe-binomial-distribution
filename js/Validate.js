@@ -1,4 +1,7 @@
 class Validate {
+    constructor(){
+        this.maxN = 100;
+    }
   validateN(n) {
     if (!(n > 0 && n < this.maxN)) {
       console.error("n := {x \u220A \u2115* | x < " + this.maxN + "}");
