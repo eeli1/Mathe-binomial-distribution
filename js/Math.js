@@ -11,15 +11,21 @@ class MyMath {
   }
 
   factorial(n) {
+    if (n <= 1) return 1;
+    return n * this.factorial(n - 1);
     let result = 1;
     for (let i = 1; i < n; i++) result *= i;
     return result;
   }
 
   nCr(n, r) {
+    return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
+    n = n + 1;
     let result = 1;
     for (let i = r; i < n; i++) result *= i;
-    return result /  this.factorial(n - r);
+    // console.log(result,this.factorial(n) / (this.factorial(r)));
+
+    return result / this.factorial(n - r);
   }
 }
 
