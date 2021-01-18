@@ -1,24 +1,25 @@
 class MyMath {
   roundPrecision(x, precision) {
+    if (precision == -1) return x;
     return parseFloat(x.toFixed(precision));
   }
 
   power(a, x) {
-    var result = a;
-    for (var i = 1; i < x; i++) result *= a;
+    let result = a;
+    for (let i = 1; i < x; i++) result *= a;
     return result;
   }
 
   factorial(n) {
-    if (isNaN(n)) return 1;
-    if (n <= 1) return 1;
-    else return n * this.factorial(n - 1);
+    let result = 1;
+    for (let i = 1; i < n; i++) result *= i;
+    return result;
   }
 
   nCr(n, r) {
-    if (r == 0) return 0;
-    if (n > 10000) return "error";
-    return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
+    let result = 1;
+    for (let i = r; i < n; i++) result *= i;
+    return result /  this.factorial(n - r);
   }
 }
 
@@ -29,20 +30,18 @@ class Binomial {
   }
 
   PMF(n, k, p) {
-    var nCr = this.math.nCr(n, k);
-    if (nCr == "error") return Infinity;
-    else if (nCr == 0) return 0;
+    let nCr = this.math.nCr(n, k);
+    if (nCr == 0) return 0;
 
-    var result = nCr * this.math.power(p, k) * this.math.power(1 - p, n - k);
+    let result = nCr * this.math.power(p, k) * this.math.power(1 - p, n - k);
     if (isNaN(result)) return 0;
     return this.math.roundPrecision(result, this.precision);
   }
 
   CDF(n, k, p) {
-    // console.log(result)
-    var result = this.PMF(n, 0, p);
+    let result = this.PMF(n, 0, p);
 
-    for (var i = 1; i < k; i++) result += this.PMF(n, i, p);
+    for (let i = 1; i < k; i++) result += this.PMF(n, i, p);
     return this.math.roundPrecision(result, this.precision);
   }
 
@@ -65,10 +64,7 @@ class Binomial {
     let max = this.math.power(10, this.precision);
 
     for (let p = max; p > 0; p--) {
-      if (
-        CDF < this.binomial.CDF(n, k, p / max)
-      )
-        return p / max;
+      if (CDF < this.binomial.CDF(n, k, p / max)) return p / max;
     }
     return -1;
   }
@@ -77,10 +73,7 @@ class Binomial {
     let max = this.math.power(10, this.precision);
 
     for (let p = 0; p < max; p++) {
-      if (
-        CDF == this.binomial.CDF(n, k, p / max)
-      )
-        return p / max
+      if (CDF == this.binomial.CDF(n, k, p / max)) return p / max;
     }
     return aproxCDFP(n, k, CDF);
   }

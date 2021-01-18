@@ -48,8 +48,6 @@ class CreateDOM {
     // <h5 class="card-title">Card title</h5>
   }
 
-  updateP(value) {}
-
   // Chart
   drawChart(ctx, data, label, backgroundColor, borderColor) {
     let index = [];
@@ -196,7 +194,7 @@ class CreateDOM {
 
     tr.appendChild(newTh("k"));
     tr.appendChild(newTh("P(X = k)"));
-    tr.appendChild(newTh("P(X ≤ k)"));
+    tr.appendChild(newTh("P(X \u2264 k)"));
     tHead.appendChild(tr);
 
     return tHead;

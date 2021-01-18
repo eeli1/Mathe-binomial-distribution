@@ -1,5 +1,4 @@
 // error and validating
-
 function makeError(error) {
   console.error(error);
   //body.appendChild(document.createTextNode(error))
@@ -30,7 +29,7 @@ function validateK(k, n) {
 }
 
 function setup() {
-  this.precision = 4;
+  this.precision = -1;
   this.binomial = new Binomial(this.precision);
   this.math = new MyMath();
   this.createDOM = new CreateDOM();
@@ -39,6 +38,8 @@ function setup() {
   this.color2 = { r: 87, g: 99, b: 255 };
   this.maxN = 100;
   this.createdObjId = [];
+  this.onlyPMF = false;
+  this.showCDFValue = true;
 }
 
 function clear() {
@@ -101,7 +102,6 @@ function generateMask(n, k, lamda) {
 function generateMaskK2(n, k1, k2) {
   var mask = [];
   for (let i = 0; i < n; i++) {
-    values.push(this.binomial.PMF(n, i, p));
     if (i >= k1 && i <= k2) mask.push(false);
     else mask.push(true);
   }
@@ -118,8 +118,123 @@ function showPMF_CDF(n, p, pmfMask, cdfMask) {
   let pmfValues = generatePMFVal(n, p);
   let cdfValues = generateCDFVal(n, p);
   makeChart("P(X = k)", "PMF_chart", pmfValues, pmfMask);
-  makeChart("P(X = k)", "PMF_chart", cdfValues, cdfMask);
+  makeChart("P(X \u2264 k)", "CDF_chart", cdfValues, cdfMask);
   makeTable2(pmfValues, cdfValues);
+}
+
+function getCDFValue(n, p, pmfMask) {
+  let result = 0;
+  for (let k = 0; k < n; k++)
+    if (pmfMask[k]) result += this.binomial.PMF(n, k, p);
+  return result;
+}
+
+function noK(n, p) {
+  let mask = generateMask(n, 0, (k, i) => {
+    return false;
+  });
+
+  if (this.showCDFValue) getCDFValue(n, p, mask);
+  if (this.onlyPMF) {
+    showPMF(n, p, mask);
+  } else {
+    showPMF_CDF(n, p, mask, mask);
+  }
+}
+
+function greater(n, p, k) {
+  let pmfMask = generateMask(n, k, (k, i) => {
+    return i > k;
+  });
+
+  if (this.showCDFValue) getCDFValue(n, p, pmfMask);
+
+  if (this.onlyPMF) {
+    showPMF(n, p, pmfMask);
+  } else {
+    showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      generateMask(n, k, (k, i) => {
+        return false;
+      })
+    );
+  }
+}
+
+function greaterEqual(n, p, k) {
+  let pmfMask = generateMask(n, k, (k, i) => {
+    return i >= k;
+  });
+
+  if (this.onlyPMF) {
+    showPMF(n, p, pmfMask);
+  } else {
+    showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      generateMask(n, k, (k, i) => {
+        return false;
+      })
+    );
+  }
+}
+
+function less(n, p, k) {
+  let pmfMask = generateMask(n, k, (k, i) => {
+    return i < k;
+  });
+
+  if (this.onlyPMF) {
+    showPMF(n, p, pmfMask);
+  } else {
+    showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      generateMask(n, k - 1, (k, i) => {
+        return i == k;
+      })
+    );
+  }
+}
+
+function lessEqual(n, p, k) {
+  let pmfMask = generateMask(n, k, (k, i) => {
+    return i <= k;
+  });
+
+  if (this.onlyPMF) {
+    showPMF(n, p, pmfMask);
+  } else {
+    showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      generateMask(n, k, (k, i) => {
+        return i == k;
+      })
+    );
+  }
+}
+
+function k1Tok2(n, p, k1, k2) {
+  let pmfMask = generateMaskK2(n, k1, k2);
+
+  if (this.onlyPMF) {
+    showPMF(n, p, pmfMask);
+  } else {
+    showPMF_CDF(
+      n,
+      p,
+      pmfMask,
+      generateMask(n, k1, (k, i) => {
+        return false;
+      })
+    );
+  }
 }
 
 function main() {
@@ -137,14 +252,5 @@ function main() {
   let p = 0.5;
   let k = 20;
 
-  showPMF_CDF(
-    n,
-    p,
-    generateMask(n, k, (k, i) => {
-      return i == k;
-    }),
-    generateMask(n, k, (k, i) => {
-      return false;
-    })
-  );
+  greaterEqual(n, p, k);
 }
