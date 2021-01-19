@@ -71,24 +71,27 @@ class CreateDOM {
   }
 
   // Tabel
-  createTableBody(pmf_values, cdf_values) {
+  createTableBody(pmfValues, cdfValues, pmfMask, cdfMask) {
     var tBody = document.createElement("tbody");
 
-    var newTr = (k, pmf, cdf) => {
+    var newTr = (k, pmf, cdf, pmfMask, cdfMask) => {
       var tr = document.createElement("tr");
-      var newTd = (text) => {
+      var newTd = (text, flag) => {
         var td = document.createElement("td");
         td.appendChild(document.createTextNode(text));
+        if (!flag) td.className = "table-active";
         return td;
       };
-      tr.appendChild(newTd(k));
-      tr.appendChild(newTd(pmf));
-      tr.appendChild(newTd(cdf));
+      tr.appendChild(newTd(k, true));
+      tr.appendChild(newTd(pmf, pmfMask));
+      tr.appendChild(newTd(cdf, cdfMask));
       return tr;
     };
 
-    for (let i = 0; i < pmf_values.length; i++)
-      tBody.appendChild(newTr(i, pmf_values[i], cdf_values[i]));
+    for (let i = 0; i < pmfValues.length; i++)
+      tBody.appendChild(
+        newTr(i, pmfValues[i], cdfValues[i], pmfMask[i], cdfMask[i])
+      );
 
     return tBody;
   }
@@ -112,13 +115,15 @@ class CreateDOM {
     return tHead;
   }
 
-  generateTable(pmf_values, cdf_values) {
+  generateTable(pmfValues, cdfValues, pmfMask, cdfMask) {
     var table = document.createElement("table");
     table.id = "table";
     table.className = "table";
 
     table.appendChild(this.createTableHead());
-    table.appendChild(this.createTableBody(pmf_values, cdf_values));
+    table.appendChild(
+      this.createTableBody(pmfValues, cdfValues, pmfMask, cdfMask)
+    );
 
     return table;
   }

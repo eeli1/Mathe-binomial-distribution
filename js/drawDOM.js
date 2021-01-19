@@ -37,8 +37,13 @@ class DrawDOM {
     this.body.appendChild(chart);
   }
 
-  makeTable(pmfValues, cdfValues) {
-    var table = this.createDOM.generateTable(pmfValues, cdfValues);
+  makeTable(pmfValues, cdfValues, pmfMask, cdfMask) {
+    var table = this.createDOM.generateTable(
+      pmfValues,
+      cdfValues,
+      pmfMask,
+      cdfMask
+    );
     table.id = "table";
     this.createdObjId.push(table.id);
     this.body.appendChild(table);
@@ -84,7 +89,7 @@ class DrawDOM {
     let cdfValues = this.generateCDFVal(n, p);
     this.makeChart("P(X = k)", "PMF_chart", pmfValues, pmfMask);
     this.makeChart("P(X \u2264 k)", "CDF_chart", cdfValues, cdfMask);
-    this.makeTable(pmfValues, cdfValues);
+    this.makeTable(pmfValues, cdfValues, pmfMask, cdfMask);
   }
 
   getCDFValue(n, p, pmfMask) {
