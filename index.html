@@ -105,19 +105,19 @@
           k Werte für die kumulierter Wahrscheinlichkeit (CFD):
         </p>
         <label for="kSEq">CDF:</label>
-        <input type="number" id="CDF" name="CDF" min="1" max="100" />
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          style="float: right; margin-top: 21px"
-        >
-          Berechnen
-        </button>
+        <input
+          type="number"
+          id="CDF"
+          name="CDF"
+          min="1"
+          max="100"
+          style="margin-bottom: 30px"
+        />
       </div>
     </div>
 
     <script>
-      main();
+      main(100, -1, 50, 0.5);
     </script>
   </body>
 </html>

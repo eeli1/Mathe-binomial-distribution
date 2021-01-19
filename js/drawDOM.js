@@ -1,20 +1,24 @@
 class DrawDOM {
-  constructor() {
-    this.precision = 4;
-    this.binomial = new Binomial(this.precision);
+  constructor(maxN, precision, binomial) {
+    this.precision = precision;
+    this.binomial = binomial;
     this.math = new MyMath();
     this.createDOM = new CreateDOM();
     this.body = document.body;
     this.color1 = { r: 255, g: 99, b: 132 };
     this.color2 = { r: 87, g: 99, b: 255 };
-    this.maxN = 100;
+    this.maxN = maxN;
     this.createdObjId = [];
+  }
+
+  showError(error) {
+    console.error(error);
   }
 
   clear() {
     this.createdObjId.forEach((id) =>
       document.getElementById(id) == undefined
-        ? console.error("id: " + id + " is undefined")
+        ? this.showError("id: " + id + " ist undefined")
         : document.getElementById(id).remove()
     );
     this.createdObjId = [];
@@ -33,15 +37,8 @@ class DrawDOM {
     this.body.appendChild(chart);
   }
 
-  makeTable1(values) {
-    var table = this.createDOM.generateTable1(values);
-    table.id = "table";
-    this.createdObjId.push(table.id);
-    this.body.appendChild(table);
-  }
-
-  makeTable2(pmfValues, cdfValues) {
-    var table = this.createDOM.generateTable2(pmfValues, cdfValues);
+  makeTable(pmfValues, cdfValues) {
+    var table = this.createDOM.generateTable(pmfValues, cdfValues);
     table.id = "table";
     this.createdObjId.push(table.id);
     this.body.appendChild(table);
@@ -49,22 +46,27 @@ class DrawDOM {
 
   generatePMFVal(n, p) {
     var values = [];
-    for (let i = 0; i < n; i++) values.push(this.binomial.PMF(n, i, p));
+    for (let i = 0; i < n; i++)
+      values.push(
+        this.math.roundPrecision(this.binomial.PMF(n, i, p), this.precision)
+      );
     return values;
   }
 
   generateCDFVal(n, p) {
     var values = [];
-    for (let i = 0; i < n; i++) values.push(this.binomial.CDF(n, i, p));
+    for (let i = 0; i < n; i++)
+      values.push(
+        this.math.roundPrecision(this.binomial.CDF(n, i, p), this.precision)
+      );
     return values;
   }
 
   generateMask(n, k, lamda) {
     var mask = [];
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++)
       if (lamda(k, i)) mask.push(false);
       else mask.push(true);
-    }
     return mask;
   }
 
@@ -77,18 +79,12 @@ class DrawDOM {
     return mask;
   }
 
-  showPMF(n, p, pmfMask) {
-    let pmfValues = this.generatePMFVal(n, p);
-    this.makeChart("P(X = k)", "PMF_chart", pmfValues, pmfMask);
-    this.makeTable1(pmfValues);
-  }
-
   showPMF_CDF(n, p, pmfMask, cdfMask) {
     let pmfValues = this.generatePMFVal(n, p);
     let cdfValues = this.generateCDFVal(n, p);
     this.makeChart("P(X = k)", "PMF_chart", pmfValues, pmfMask);
     this.makeChart("P(X \u2264 k)", "CDF_chart", cdfValues, cdfMask);
-    this.makeTable2(pmfValues, cdfValues);
+    this.makeTable(pmfValues, cdfValues);
   }
 
   getCDFValue(n, p, pmfMask) {
@@ -103,7 +99,7 @@ class DrawDOM {
       return false;
     });
     this.showPMF_CDF(n, p, mask, mask);
-    return this.getCDFValue(n, p, mask);
+    return 1;
   }
 
   kEqual(n, p, k) {

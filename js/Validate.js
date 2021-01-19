@@ -1,10 +1,11 @@
 class Validate {
-    constructor(){
-        this.maxN = 100;
-    }
+  constructor(drawDOM) {
+    this.maxN = 100;
+    this.drawDOM = drawDOM;
+  }
   validateN(n) {
     if (!(n > 0 && n < this.maxN)) {
-      console.error("n := {x \u220A \u2115* | x < " + this.maxN + "}");
+      this.drawDOM.showError("n := {x \u220A \u2115* | x < " + this.maxN + "}");
       return false;
     }
     return true;
@@ -12,7 +13,7 @@ class Validate {
 
   validateP(p) {
     if (!(p > 0 && p < 1)) {
-      console.error("p := {x \u220A \u211D | 0 < x < 1}");
+      this.drawDOM.showError("p := {x \u220A \u211D | 0 < x < 1}");
       return false;
     }
     return true;
@@ -20,7 +21,15 @@ class Validate {
 
   validateK(k, n) {
     if (k > n) {
-      console.error("k < n");
+      this.drawDOM.showError("k < n");
+      return false;
+    }
+    return true;
+  }
+
+  validateCDF(CDF) {
+    if (!(CDF > 0 && CDF < 1)) {
+      this.drawDOM.showError("CDF := {x \u220A \u211D | 0 < x < 1}");
       return false;
     }
     return true;
