@@ -30,8 +30,10 @@ class MyMath {
 }
 
 class Binomial {
-  constructor() {
+  constructor(maxN) {
     this.math = new MyMath();
+    this.aproxPrecision = 5;
+    this.maxN = maxN;
   }
 
   PMF(n, k, p) {
@@ -51,10 +53,27 @@ class Binomial {
   }
 
   aproxCDFN(p, k, CDF) {
+    let n1 = 0;
+    let n2 = 0;
     for (let n = k; n < this.maxN; n++) {
-      if (CDF > this.CDF(n, k, p)) return n;
+      if (CDF > this.CDF(n, k, p)) {
+        n1 = n;
+        break;
+      }
     }
-    return -1;
+
+    if (n1 == 0) return -1;
+
+    for (let n = this.maxN; n > k; n--) {
+      if (CDF < this.CDF(n, k, p)) {
+        n2 = n;
+        break;
+      }
+    }
+
+    if (n2 == 0) return -1;
+
+    return parseInt((n1 + n2) / 2);
   }
 
   getCDFN(p, k, CDF) {
@@ -62,11 +81,11 @@ class Binomial {
       if (CDF == this.CDF(n, k, p)) return n;
     }
 
-    return this.aproxCDFP(p, k, CDF);
+    return this.aproxCDFN(p, k, CDF);
   }
 
   aproxCDFP(n, k, CDF) {
-    let max = this.math.power(10, 22);
+    let max = this.math.power(10, this.aproxPrecision);
 
     for (let p = max; p > 0; p--) {
       if (CDF < this.CDF(n, k, p / max)) return p / max;
@@ -75,10 +94,14 @@ class Binomial {
   }
 
   getCDFP(n, k, CDF) {
-    let max = this.math.power(10, 22);
+    let max = this.math.power(10, this.aproxPrecision);
 
     for (let p = 0; p < max; p++) {
-      if (CDF == this.CDF(n, k, p / max)) return p / max;
+      if (
+        this.math.roundPrecision(CDF, this.aproxPrecision) ==
+        this.math.roundPrecision(this.CDF(n, k, p / max), this.aproxPrecision)
+      )
+        return p / max;
     }
     return this.aproxCDFP(n, k, CDF);
   }
@@ -93,10 +116,7 @@ class Binomial {
         break;
       }
     }
-    console.log(n1);
-
     if (n1 == 0) return -1;
-    console.log("!!");
 
     for (let n = k; n < this.maxN; n++) {
       if (PMF >= this.PMF(n, k, p)) {
@@ -105,7 +125,6 @@ class Binomial {
       }
     }
     if (n2 == 0) return -1;
-    console.log("!!");
 
     return (n1 + n2) / 2;
   }
@@ -122,10 +141,14 @@ class Binomial {
     let p1 = 0;
     let p2 = 0;
 
-    let max = this.math.power(10, 22);
+    let max = this.math.power(10, this.aproxPrecision);
 
     for (let p = max; p > 0; p--) {
-      if (PMF < this.CDF(n, k, p / max)) {
+      if (
+        (this.math.roundPrecision(PMF, this.aproxPrecision) <
+          this.math.roundPrecision(this.PMF(n, k, p / max)),
+        this.aproxPrecision)
+      ) {
         p1 = p / max;
         break;
       }
@@ -133,7 +156,11 @@ class Binomial {
     if (p1 == 0) return -1;
 
     for (let p = 0; p < max; p--) {
-      if (PMF > this.CDF(n, k, p / max)) {
+      if (
+        (this.math.roundPrecision(PMF, this.aproxPrecision) >
+          this.math.roundPrecision(this.PMF(n, k, p / max)),
+        this.aproxPrecision)
+      ) {
         p2 = p / max;
         break;
       }
@@ -144,12 +171,24 @@ class Binomial {
   }
 
   getPMFP(n, k, PMF) {
-    let max = this.math.power(10, 22);
+    let max = this.math.power(10, this.aproxPrecision);
+    PMF = this.math.roundPrecision(PMF, this.aproxPrecision);
 
-    for (let p = 0; p < max; p++) {
-      if (PMF == this.CDF(n, k, p / max)) return p / max;
-    }
+    for (let p = 0; p < max; p++)
+      if (
+        PMF ==
+        this.math.roundPrecision(this.PMF(n, k, p / max), this.aproxPrecision)
+      )
+        return p / max;
 
     return this.aproxPMFP(n, k, PMF);
+  }
+
+  getPMFK(n, p, PMF) {
+    for (let k = 0; k < n; k++) if (PMF <= this.PMF(n, k, p)) return k;
+  }
+
+  getCDFK(n, p, CDF) {
+    for (let k = 0; k < n; k++) if (CDF <= this.CDF(n, k, p)) return k;
   }
 }

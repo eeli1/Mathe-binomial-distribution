@@ -160,10 +160,20 @@ function k1Tok2() {
 }
 
 function main(maxN, precision, defaltN, defaltP) {
-  this.binomial = new Binomial();
+  this.binomial = new Binomial(maxN);
   this.drawDOM = new DrawDOM(maxN, precision, binomial);
-  this.validate = new Validate(this.drawDOM);
+  this.validate = new Validate(this.drawDOM, maxN);
   document.getElementById("nInput").value = defaltN;
   document.getElementById("pInput").value = defaltP;
+
+  let n = 50;
+  let p = 0.5;
+  let k = 25;
+
+  let CDF = this.binomial.CDF(n, k, p);
+  let result = this.binomial.getCDFN(p, k, CDF);
+
+  console.log(result, this.binomial.CDF(result, k, p), CDF);
+
   noK();
 }

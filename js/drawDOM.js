@@ -13,6 +13,7 @@ class DrawDOM {
 
   showError(error) {
     console.error(error);
+    alert(error);
   }
 
   clear() {

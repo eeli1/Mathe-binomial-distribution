@@ -1,6 +1,6 @@
 class Validate {
-  constructor(drawDOM) {
-    this.maxN = 100;
+  constructor(drawDOM, maxN) {
+    this.maxN = maxN;
     this.drawDOM = drawDOM;
   }
   validateN(n) {
