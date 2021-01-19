@@ -12,7 +12,6 @@ function noK() {
   }
 }
 
-/*
 function nIsNaN(p, k, CDF, lamdaN, lamdaCDFDraw) {
   if (!this.validate.validateP(p) || !this.validate.validateCDF(CDF)) return;
   let n = lamdaN(p, k, CDF);
@@ -32,7 +31,7 @@ function pIsNaN(n, k, CDF, lamdaP, lamdaCDFDraw) {
   document.getElementById("CDF").value = lamdaCDFDraw(n, p, k);
 }
 
-function kIsNaN(n, p, CDF, lamdaK, lamdaCDFDraw) {
+function kIsNaN(n, p, CDF, lamdaK, lamdaCDFDraw, kId) {
   if (
     !this.validate.validateN(n) ||
     !this.validate.validateP(p) ||
@@ -70,7 +69,7 @@ function showForK(kId, lamdaCDFDraw, lamdaN, lamdaP, lamdaK) {
   } else if (!isNaN(n) && isNaN(p) && !isNaN(k) && !isNaN(CDF)) {
     pIsNaN(n, k, CDF, lamdaP, lamdaCDFDraw);
   } else if (!isNaN(n) && !isNaN(p) && isNaN(k) && !isNaN(CDF)) {
-    kIsNaN(n, p, CDF, lamdaK, lamdaCDFDraw);
+    kIsNaN(n, p, CDF, lamdaK, lamdaCDFDraw, kId);
   } else if (!isNaN(n) && !isNaN(p) && !isNaN(k) && isNaN(CDF)) {
     CDFIsNaN(n, p, k, lamdaCDFDraw);
   } else if (!isNaN(n) && !isNaN(p) && !isNaN(k) && !isNaN(CDF)) {
@@ -89,8 +88,18 @@ function kEqual() {
     (n, p, PMF) => this.binomial.getPMFK(n, p, PMF)
   );
 }
-*/
 
+function kLessEqual() {
+  showForK(
+    "kLEq",
+    (n, p, k) => this.drawDOM.kLessEqual(n, p, k),
+    (p, k, PMF) => this.binomial.getCDFN(p, k, PMF),
+    (n, k, PMF) => this.binomial.getCDFP(n, k, PMF),
+    (n, p, PMF) => this.binomial.getCDFK(n, p, PMF)
+  );
+}
+
+/*
 function kEqual() {
   this.drawDOM.clear();
 
@@ -105,22 +114,6 @@ function kEqual() {
   )
     return;
   document.getElementById("CDF").value = this.drawDOM.kEqual(n, p, k);
-}
-
-function kGreaterEqual() {
-  this.drawDOM.clear();
-
-  let n = parseInt(document.getElementById("nInput").value) + 1;
-  let p = parseFloat(document.getElementById("pInput").value);
-  let k = parseFloat(document.getElementById("kGEq").value);
-
-  if (
-    !this.validate.validateN(n) ||
-    !this.validate.validateP(p) ||
-    !this.validate.validateK(k, n)
-  )
-    return;
-  document.getElementById("CDF").value = this.drawDOM.kGreaterEqual(n, p, k);
 }
 
 function kLessEqual() {
@@ -138,6 +131,23 @@ function kLessEqual() {
     return;
 
   document.getElementById("CDF").value = this.drawDOM.kLessEqual(n, p, k);
+}
+*/
+
+function kGreaterEqual() {
+  this.drawDOM.clear();
+
+  let n = parseInt(document.getElementById("nInput").value) + 1;
+  let p = parseFloat(document.getElementById("pInput").value);
+  let k = parseFloat(document.getElementById("kGEq").value);
+
+  if (
+    !this.validate.validateN(n) ||
+    !this.validate.validateP(p) ||
+    !this.validate.validateK(k, n)
+  )
+    return;
+  document.getElementById("CDF").value = this.drawDOM.kGreaterEqual(n, p, k);
 }
 
 function k1Tok2() {
@@ -165,15 +175,6 @@ function main(maxN, precision, defaltN, defaltP) {
   this.validate = new Validate(this.drawDOM, maxN);
   document.getElementById("nInput").value = defaltN;
   document.getElementById("pInput").value = defaltP;
-
-  let n = 50;
-  let p = 0.5;
-  let k = 25;
-
-  let CDF = this.binomial.CDF(n, k, p);
-  let result = this.binomial.getCDFN(p, k, CDF);
-
-  console.log(result, this.binomial.CDF(result, k, p), CDF);
 
   noK();
 }
