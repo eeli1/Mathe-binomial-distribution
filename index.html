@@ -1,123 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Binomial Distribution</title>
 
     <link rel="stylesheet" href="style/bootstrap.min.css" />
-    <script src="js/ChartLib.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"></script>
     <script src="js/Math.js"></script>
     <script src="js/MainScript.js"></script>
     <script src="js/CreateDOM.js"></script>
     <script src="js/DrawDOM.js"></script>
     <script src="js/Validate.js"></script>
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="card" style="width: 18rem; margin: 10px; float: left">
-      <div class="card-body">
-        <p class="font-weight-bold">Werte für n und p</p>
-        <label for="nInput">n:</label>
-        <input type="number" id="nInput" name="nInput" min="1" max="100" />
-        <label for="pInput">p:</label>
-        <input type="number" id="pInput" name="pInput" min="0.01" max="1" />
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          style="float: right; margin-top: 10px"
-          onclick="noK()"
-        >
+        <div class="card-body">
+            <p class="font-weight-bold">Werte für n und p</p>
+            <label for="nInput">n:</label>
+            <input type="number" id="nInput" name="nInput" min="1" max="100" />
+            <label for="pInput">p:</label>
+            <input type="number" id="pInput" name="pInput" min="0.01" max="1" />
+            <button type="button" class="btn btn-outline-primary" style="float: right; margin-top: 10px" onclick="noK()">
           Berechnen
         </button>
-      </div>
+        </div>
     </div>
 
     <div class="card" style="width: 18rem; margin: 10px; float: left">
-      <div class="card-body">
-        <p class="font-weight-bold">k Werte für P(X = k)</p>
-        <label for="kEq">k:</label>
-        <input type="number" id="kEq" name="kEq" min="1" max="100" />
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          style="float: right; margin-top: 45px"
-          onclick="kEqual()"
-        >
+        <div class="card-body">
+            <p class="font-weight-bold">k Werte für P(X = k)</p>
+            <label for="kEq">k:</label>
+            <input type="number" id="kEq" name="kEq" min="1" max="100" />
+            <button type="button" class="btn btn-outline-primary" style="float: right; margin-top: 45px" onclick="kEqual()">
           Berechnen
         </button>
-      </div>
+        </div>
     </div>
 
     <div class="card" style="width: 18rem; margin: 10px; float: left">
-      <div class="card-body">
-        <p class="font-weight-bold">k Werte für P(X ≤ k)</p>
-        <label for="kLEq">k:</label>
-        <input type="number" id="kLEq" name="kLEq" min="1" max="100" />
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          style="float: right; margin-top: 45px"
-          onclick="kLessEqual()"
-        >
+        <div class="card-body">
+            <p class="font-weight-bold">k Werte für P(X ≤ k)</p>
+            <label for="kLEq">k:</label>
+            <input type="number" id="kLEq" name="kLEq" min="1" max="100" />
+            <button type="button" class="btn btn-outline-primary" style="float: right; margin-top: 45px" onclick="kLessEqual()">
           Berechnen
         </button>
-      </div>
+        </div>
     </div>
 
     <div class="card" style="width: 18rem; margin: 10px; float: left">
-      <div class="card-body">
-        <p class="font-weight-bold">k Werte für P(X ≥ k)</p>
-        <label for="kGEq">k:</label>
-        <input type="number" id="kGEq" name="kGEq" min="1" max="100" />
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          style="float: right; margin-top: 45px"
-          onclick="kGreaterEqual()"
-        >
+        <div class="card-body">
+            <p class="font-weight-bold">k Werte für P(X ≥ k)</p>
+            <label for="kGEq">k:</label>
+            <input type="number" id="kGEq" name="kGEq" min="1" max="100" />
+            <button type="button" class="btn btn-outline-primary" style="float: right; margin-top: 45px" onclick="kGreaterEqual()">
           Berechnen
         </button>
-      </div>
+        </div>
     </div>
 
     <div class="card" style="width: 18rem; margin: 10px; float: left">
-      <div class="card-body">
-        <p class="font-weight-bold">k Werte für P(k1 ≤ X ≤ k2)</p>
-        <label for="k1">k1:</label>
-        <input type="number" id="k1" name="k1" min="1" max="100" />
-        <label for="k2">k2:</label>
-        <input type="number" id="k2" name="k2" min="1" max="100" />
-        <button
-          type="button"
-          class="btn btn-outline-primary"
-          style="float: right; margin-top: 10px"
-          onclick="k1Tok2()"
-        >
+        <div class="card-body">
+            <p class="font-weight-bold">k Werte für P(k1 ≤ X ≤ k2)</p>
+            <label for="k1">k1:</label>
+            <input type="number" id="k1" name="k1" min="1" max="100" />
+            <label for="k2">k2:</label>
+            <input type="number" id="k2" name="k2" min="1" max="100" />
+            <button type="button" class="btn btn-outline-primary" style="float: right; margin-top: 10px" onclick="k1Tok2()">
           Berechnen
         </button>
-      </div>
+        </div>
     </div>
 
     <div class="card" style="width: 18rem; margin: 10px; float: left">
-      <div class="card-body">
-        <p class="font-weight-bold">
-          k Werte für die kumulierter Wahrscheinlichkeit (CFD):
-        </p>
-        <label for="kSEq">CDF:</label>
-        <input
-          type="number"
-          id="CDF"
-          name="CDF"
-          min="1"
-          max="100"
-          style="margin-bottom: 30px"
-        />
-      </div>
+        <div class="card-body">
+            <p class="font-weight-bold">
+                k Werte für die kumulierter Wahrscheinlichkeit (CFD):
+            </p>
+            <label for="kSEq">CDF:</label>
+            <input type="number" id="CDF" name="CDF" min="1" max="100" style="margin-bottom: 30px" />
+        </div>
     </div>
 
     <script>
-      main(100, -1, 50, 0.5);
+        main(100, -1, 50, 0.5);
     </script>
-  </body>
+</body>
+
 </html>
